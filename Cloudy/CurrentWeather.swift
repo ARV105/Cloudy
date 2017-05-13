@@ -26,12 +26,14 @@ class CurrentWeather {
         if _date == nil {
             _date = ""
         }
-        
+          //format of the dates
         let dateFormatter = DateFormatter()
         dateFormatter.dateStyle = .long
         dateFormatter.timeStyle = .none
+        // removes the time
         let currentDate = dateFormatter.string(from: Date())
         self._date = "Today, \(currentDate)"
+        
         return _date
         
         
@@ -52,27 +54,31 @@ class CurrentWeather {
         }
         return _currentTemp
     }
-    
+    //function to doownload the weather data
     func downloadWeatherDetails(completed: @escaping DownloadComplete) {
         //Download current weather data
-        
-        Alamofire.request(CURRENT_WEATHER_URL).responseJSON { response in
+        let currentWeatherURL = URL(string: CURRENT_WEATHER_URL)!
+        //the alamofire request
+        Alamofire.request(currentWeatherURL).responseJSON { response in
+            //no completion block, instead there is a response in so it can specify the response
             let result = response.result
-            
+            //create a dictionary that will contain the result value
+            // casted in a dictionary from the API in <String, AnyObject>
             if let dict = result.value as? Dictionary<String, AnyObject> {
-                
+                //city names is capitalized
                 if let name = dict["name"] as? String {
                     self._cityName = name.capitalized
                     print(self._cityName)
                 }
+                //fectehs the weather dictionary from inside the dict and casts as an array of dictionaries
                 if let weather = dict["weather"] as? [Dictionary<String, AnyObject>] {
-                    
+                    //onky need the first entry and "main" is the key for the weather type
                     if let main = weather[0]["main"] as? String {
                         self._weatherType = main.capitalized
                         print(self._weatherType)
                     }
                 }
-                
+                //accesses the main dictionary not in th weather array
                 if let main = dict["main"] as? Dictionary<String, AnyObject> {
                     if let currentTemperature = main["temp"] as? Double {
                         let kelvinToFarenheitPreDivision = (currentTemperature * (9/5) - 459.67)

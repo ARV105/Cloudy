@@ -47,6 +47,7 @@ class Forecast {
     }
     
     init(weatherDict: Dictionary<String, AnyObject>) {
+        // Inside each day we have the "temp" dictionary that has the the min and max temps
         if let temp = weatherDict["temp"] as? Dictionary<String, AnyObject> {
             if let min = temp["min"] as? Double {
                 
@@ -67,7 +68,7 @@ class Forecast {
             
         }
     }
-    
+            /// Insde each day we have the "weather" dictionary that has a weather type
         if let weather = weatherDict["weather"] as? Dictionary<String, AnyObject> {
             if let main = weather["main"] as? String {
                 self._weatherType = main
@@ -76,19 +77,18 @@ class Forecast {
 }
 
         if let date = weatherDict["dt"] as? Double {
-            
             let unixConvertDate = Date(timeIntervalSince1970: date)
-            let dateFormatter = DateFormatter()
-            dateFormatter.dateStyle = .full
-            dateFormatter.dateFormat = "EEEE"
-            dateFormatter.timeStyle = .none
+//            let dateFormatter = DateFormatter()
+//            dateFormatter.dateStyle = .full
+//            dateFormatter.dateFormat = "EEEE"
+//            dateFormatter.timeStyle = .none
             self._date = unixConvertDate.dayOfTheWeek()
         }
         
     }
     
 }
-
+//Create an extension from the date to extract the day of the week
 extension Date {
     func dayOfTheWeek() -> String {
         let dateFormatter = DateFormatter()
